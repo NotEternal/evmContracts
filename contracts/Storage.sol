@@ -19,7 +19,7 @@ contract Storage is IStorage {
         _;
     }
 
-    function getData(string memory _key) external override view returns(Data memory) {
+    function getData(string memory _key) external override view notEmpty(_key) returns(Data memory) {
         return _keyData(_key);
     }
 

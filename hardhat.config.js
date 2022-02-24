@@ -2,8 +2,12 @@ require('@nomiclabs/hardhat-waffle')
 require('@nomiclabs/hardhat-etherscan')
 
 const config = require('dotenv').config()
-const { ACCOUNT_PRIVATE_KEY, ETHERSCAN_API_KEY, BSCSCAN_API_KEY } =
-  config.parsed
+const {
+  ACCOUNT_PRIVATE_KEY,
+  ETHERSCAN_API_KEY,
+  BSCSCAN_API_KEY,
+  POLYGON_API_KEY,
+} = config.parsed
 
 // https://hardhat.org/guides/create-task.html
 task('accounts', 'Prints the list of accounts', async (taskArgs, hre) => {
@@ -48,6 +52,26 @@ module.exports = {
       url: 'https://rinkeby.infura.io/v3/3cb031735f9a46a69f2babab4fae3e0d',
       accounts: [ACCOUNT_PRIVATE_KEY],
     },
+    bsc: {
+      chainId: 56,
+      url: 'https://bsc-dataseed.binance.org',
+      accounts: [ACCOUNT_PRIVATE_KEY],
+    },
+    bscTestnet: {
+      chainId: 97,
+      url: 'https://data-seed-prebsc-1-s1.binance.org:8545',
+      accounts: [ACCOUNT_PRIVATE_KEY],
+    },
+    polygon: {
+      chainId: 137,
+      url: 'https://polygon-rpc.com/',
+      accounts: [ACCOUNT_PRIVATE_KEY],
+    },
+    polygonTestnet: {
+      chainId: 80001,
+      url: 'https://matic-mumbai.chainstacklabs.com',
+      accounts: [ACCOUNT_PRIVATE_KEY],
+    },
   },
   mocha: {
     timeout: 40_000,
@@ -58,8 +82,8 @@ module.exports = {
       rinkeby: ETHERSCAN_API_KEY,
       bsc: BSCSCAN_API_KEY,
       bscTestnet: BSCSCAN_API_KEY,
-      // polygon: "",
-      // polygonMumbai: "",
+      polygon: POLYGON_API_KEY,
+      polygonMumbai: POLYGON_API_KEY,
       // heco: "",
       // hecoTestnet: "",
       // opera: "",
