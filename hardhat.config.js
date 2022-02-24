@@ -1,18 +1,18 @@
-require("@nomiclabs/hardhat-waffle");
-require("@nomiclabs/hardhat-etherscan");
+require('@nomiclabs/hardhat-waffle')
+require('@nomiclabs/hardhat-etherscan')
 
-const config = require("dotenv").config();
+const config = require('dotenv').config()
 const { ACCOUNT_PRIVATE_KEY, ETHERSCAN_API_KEY, BSCSCAN_API_KEY } =
-  config.parsed;
+  config.parsed
 
 // https://hardhat.org/guides/create-task.html
-task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
-  const accounts = await hre.ethers.getSigners();
+task('accounts', 'Prints the list of accounts', async (taskArgs, hre) => {
+  const accounts = await hre.ethers.getSigners()
 
   for (const account of accounts) {
-    console.log(account.address);
+    console.log(account.address)
   }
-});
+})
 
 // https://hardhat.org/config/
 /**
@@ -22,7 +22,7 @@ module.exports = {
   solidity: {
     compilers: [
       {
-        version: "0.8.12",
+        version: '0.8.12',
         settings: {
           optimizer: {
             enabled: true,
@@ -31,7 +31,7 @@ module.exports = {
         },
       },
       {
-        version: "0.8.10",
+        version: '0.8.10',
         settings: {
           optimizer: {
             enabled: true,
@@ -45,7 +45,7 @@ module.exports = {
     hardhat: {},
     rinkeby: {
       chainId: 4,
-      url: "https://rinkeby.infura.io/v3/3cb031735f9a46a69f2babab4fae3e0d",
+      url: 'https://rinkeby.infura.io/v3/3cb031735f9a46a69f2babab4fae3e0d',
       accounts: [ACCOUNT_PRIVATE_KEY],
     },
   },
@@ -81,4 +81,4 @@ module.exports = {
       // auroraTestnet: "",
     },
   },
-};
+}

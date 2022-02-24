@@ -1,4 +1,4 @@
-const hre = require("hardhat");
+const hre = require('hardhat')
 
 async function main() {
   // Hardhat always runs the compile task when running scripts with its command
@@ -7,17 +7,17 @@ async function main() {
   // manually to make sure everything is compiled
   // await hre.run('compile');
 
-  const Storage = await hre.ethers.getContractFactory("Storage");
-  const storage = await Storage.deploy();
+  const Storage = await hre.ethers.getContractFactory('Storage')
+  const storage = await Storage.deploy()
 
-  await storage.deployed();
+  await storage.deployed()
 
-  console.log("Storage deployed to:", storage.address);
+  console.log('Storage deployed to:', storage.address)
 }
 
 main()
   .then(() => process.exit(0))
   .catch((error) => {
-    console.error(error);
-    process.exit(1);
-  });
+    console.error(error)
+    process.exit(1)
+  })
