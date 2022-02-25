@@ -1,7 +1,6 @@
 const { expect } = require('chai')
 const { ethers } = require('hardhat')
-
-const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
+const { ZERO_ADDRESS } = require('../constants')
 
 describe('Storage', function () {
   const KEY1 = 'localhost'

@@ -6,13 +6,19 @@ async function main() {
   // If this script is run directly using `node` you may want to call compile
   // manually to make sure everything is compiled
   // await hre.run('compile');
+  const contractsToDeploy = [
+    { name: 'Storage', args: [] },
+    // { name: 'Dash', args: [] },
+  ]
 
-  const Storage = await hre.ethers.getContractFactory('Storage')
-  const storage = await Storage.deploy()
+  contractsToDeploy.forEach(({ name, args }) => {
+    const instance = await hre.ethers.getContractFactory(name)
+    const contract = await instance.deploy(...args)
 
-  await storage.deployed()
+    await contract.deployed()
 
-  console.log('Storage deployed to:', storage.address)
+    console.log(`${name} deployed to:`, contract.address)
+  })
 }
 
 main()
