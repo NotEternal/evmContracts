@@ -11,14 +11,15 @@ async function main() {
     // { name: 'Dash', args: [] },
   ]
 
-  contractsToDeploy.forEach(({ name, args }) => {
+  for (let i = 0; i < contractsToDeploy.length; i += 1) {
+    const { name, args } = contractsToDeploy[i]
     const instance = await hre.ethers.getContractFactory(name)
     const contract = await instance.deploy(...args)
 
     await contract.deployed()
 
     console.log(`${name} deployed to:`, contract.address)
-  })
+  }
 }
 
 main()
