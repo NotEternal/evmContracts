@@ -2,6 +2,7 @@
 pragma solidity ^0.8.12;
 
 import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
+import "./libraries/SafeMath.sol";
 import "./interfaces/IERC20.sol";
 import "./interfaces/IStorage.sol";
 
@@ -16,7 +17,7 @@ contract Dash {
     address paymentDestination;
     address rewardToken;
     uint rewardAmount;
-    mapping(string => int) productPrices;
+    mapping(string => uint) productPrices;
 
     modifier onlyOwner() {
         require(msg.sender == owner, "FORBIDDEN");
@@ -46,9 +47,12 @@ contract Dash {
         rewardAmount = _rewardAmount;
     }
 
-    function getLatestPrice() public view returns (int) {
-        (,int price,,,) = priceFeed.latestRoundData();
-        return price;
+    function getLatestPrice() public view returns (uint) {
+        (,int price,,,) = priceAggregator.latestRoundData();
+        if (price >= 0) {
+            return uint(price);
+        }
+        return 0;
     }
 
     function getData(string memory _key) public view notEmpty(_key) returns(IStorage.Data memory) {
@@ -56,7 +60,7 @@ contract Dash {
     }
 
     function payment(
-        string _productId,
+        string memory _productId,
         string memory _key,
         string memory _data,
         address _rewardReceiver
@@ -64,8 +68,8 @@ contract Dash {
         /* TODO:
          * check all calculations and be sure in valid values (without (under|over)flowing)
          */
-        int nativeCoinPrice = getLatestPrice();
-        int fiatPrice = productPrices[_productId];
+        uint nativeCoinPrice = getLatestPrice();
+        uint fiatPrice = productPrices[_productId];
         require(fiatPrice >= 0, "EMPTY_PRODUCT_PRICE");
         uint degreeOfen = 0;
         while(fiatPrice < nativeCoinPrice) {
@@ -90,7 +94,7 @@ contract Dash {
     }
 
     function setData(string memory _key, string memory _data) private {
-        IStorage(storageAddress).setData(_key, IStorage.Data({owner: address(this), info: _data}));
+        IStorage(storageAddress).setKeyData(_key, IStorage.Data({owner: address(this), info: _data}));
     }
 
     function sendReward(address _to) private {

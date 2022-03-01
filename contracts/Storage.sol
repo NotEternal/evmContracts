@@ -7,7 +7,7 @@ contract Storage is IStorage {
     mapping(string => Data) private allData;
     string[] private keys;
 
-    modifier onlyOwner(string memory _key) {
+    modifier onlyDataOwner(string memory _key) {
         require(allData[_key].owner != address(0), 'NO_OWNER');
         require(msg.sender == allData[_key].owner, 'FORBIDDEN');
         _;
@@ -35,26 +35,34 @@ contract Storage is IStorage {
         return _allKeysData;
     }
 
-    function setData(string memory _key, Data memory _data) external override notEmpty(_key) {
-        if (allData[_key].owner != address(0)) {
-            require(msg.sender == allData[_key].owner, 'FORBIDDEN');
-        } else {
-            keys.push(_key);
-        }
-        allData[_key].owner = _data.owner;
-        allData[_key].info = _data.info;
+    function setKeyData(string memory _key, Data memory _data) external override {
+        _setKeyData(_key, _data);
     }
 
-    function clearData(string memory _key) external override notEmpty(_key) onlyOwner(_key) {
-        delete allData[_key];
-        bool arrayOffset;
-        for(uint x; x < keys.length - 1; x++) {
-            if (keccak256(abi.encodePacked(keys[x])) == keccak256(abi.encodePacked(_key))) {
-                arrayOffset = true;
-            }
-            if (arrayOffset) keys[x] = keys[x + 1];
+    function setKeysData(KeyData[] memory _keysData) external override {
+        require(_keysData.length > 0, 'NO_DATA');
+        for(uint x; x < _keysData.length; x++) {
+            _setKeyData(_keysData[x].key, _keysData[x].data);
         }
-        if (arrayOffset) keys.pop();
+    }
+
+    function clearData(string memory _key) external override notEmpty(_key) onlyDataOwner(_key) {
+        delete allData[_key];
+        if (keys.length == 0) return;
+        if (keys.length == 1) {
+            if (keccak256(abi.encodePacked(keys[0])) == keccak256(abi.encodePacked(_key))) {
+                keys.pop();
+            }
+        } else {
+            bool arrayOffset;
+            for(uint x; x < keys.length - 1; x++) {
+                if (keccak256(abi.encodePacked(keys[x])) == keccak256(abi.encodePacked(_key))) {
+                    arrayOffset = true;
+                }
+                if (arrayOffset) keys[x] = keys[x + 1];
+            }
+            if (arrayOffset) keys.pop();
+        }
     }
 
     function _keyData(string memory _key) private view notEmpty(_key) returns(Data memory _data) {
@@ -63,4 +71,14 @@ contract Storage is IStorage {
             info: allData[_key].info
         });
     }
+
+    function _setKeyData(string memory _key, Data memory _data) private notEmpty(_key) {
+        if (allData[_key].owner != address(0)) {
+            require(msg.sender == allData[_key].owner, 'FORBIDDEN');
+        } else {
+            keys.push(_key);
+        }
+        allData[_key].owner = _data.owner;
+        allData[_key].info = _data.info;
+    } 
 }
