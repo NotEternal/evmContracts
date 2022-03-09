@@ -17,5 +17,6 @@ interface IStorage {
     function allKeysData() external view returns(Data[] memory);
     function setKeyData(string memory _key, Data memory _data) external;
     function setKeysData(KeyData[] memory _keysData) external;
-    function clearData(string memory _key) external;
+    function clearKeyData(string memory _key) external;
+    function clearKeysData(string[] memory _keys) external;
 }
