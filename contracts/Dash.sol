@@ -10,17 +10,22 @@ import "./interfaces/IStorage.sol";
 contract Dash {
     using SafeMath for uint;
 
+    struct ProductItem {
+        string productId;
+        uint price;
+    }
+
     AggregatorV3Interface internal priceAggregator;
     address aggregatorAddress;
     address storageAddress;
-    address owner;
     address paymentDestination;
     address rewardToken;
     uint rewardAmount;
-    mapping(string => uint) productPrices;
+    mapping(string => uint) private productPrices;
+    mapping(address => address) private owners;
 
-    modifier onlyOwner() {
-        require(msg.sender == owner, "FORBIDDEN");
+    modifier onlyOwners() {
+        require(owners[msg.sender] == msg.sender, "FORBIDDEN");
         _;
     }
 
@@ -41,7 +46,7 @@ contract Dash {
         aggregatorAddress = _aggregatorAddress;
         priceAggregator = AggregatorV3Interface(_aggregatorAddress);
         storageAddress = _storageAddress;
-        owner = _owner;
+        owners[_owner] = _owner;
         paymentDestination = _paymentDest;
         rewardToken = _rewardToken;
         rewardAmount = _rewardAmount;
@@ -65,24 +70,26 @@ contract Dash {
         string memory _data,
         address _rewardReceiver
     ) external payable notEmpty(_productId) notEmpty(_key) {
+        require(aggregatorAddress != address(0), "NO_AGGREGATOR_ADDR");
         /* TODO:
          * create the list of stable tokens and use their price if user uses such tokens 
          * check all calculations and be sure in valid values (without (under|over)flowing)
          */
         uint nativeCoinPrice = getLatestPrice();
+        require(nativeCoinPrice > 0, "NO_COIN_PRICE");
         uint fiatPrice = productPrices[_productId];
         require(fiatPrice >= 0, "EMPTY_PRODUCT_PRICE");
-        uint degreeOfen = 0;
+        uint degreeOfTen = 0;
         while(fiatPrice < nativeCoinPrice) {
-            fiatPrice = fiatPrice * 10;
-            degreeOfen += 1;
+            fiatPrice = fiatPrice.mul(10);
+            degreeOfTen += 1;
         }
         uint amount = fiatPrice / nativeCoinPrice;
-        uint value = msg.value.mul(10 ** degreeOfen);
+        uint value = msg.value.mul(10 ** degreeOfTen);
         uint inaccuracyPercent = 1;
         uint acceptableInaccuracy = (amount / 100) * inaccuracyPercent;
         require(value > (amount - acceptableInaccuracy) && value < (amount + acceptableInaccuracy), "WRONG_VALUE");
-        (bool success,) = paymentDestination.call{value: msg.value}("");
+        (bool success,) = paymentDestination.call{ value: msg.value }("");
         require(success, "FAILED_PAYMENT");
         setData(_key, _data);
         if (IERC20(rewardToken).balanceOf(address(this)) >= rewardAmount) {
@@ -94,6 +101,37 @@ contract Dash {
         IStorage(storageAddress).clearKeyData(_key);
     }
 
+    function addOwner(address _owner) public onlyOwners {
+        owners[_owner] = _owner;
+    }
+
+    function removeOwner(address _owner) public onlyOwners {
+        delete owners[_owner];
+    }
+
+    function setAggregatorAddress(address _aggregatorAddress) public onlyOwners {
+        aggregatorAddress = _aggregatorAddress;
+    }
+
+    function setPaymentDestination(address _moneyDest) public onlyOwners {
+        paymentDestination = _moneyDest;
+    }
+
+    function setStorage(address _storageAddress) public onlyOwners {
+        storageAddress = _storageAddress;
+    }
+
+    function setProductPrice(string _productId, uint _price) public onlyOwners {
+        productPrices[_productId] = _price;
+    }
+
+    function setProductsPrices(ProductItem[] memory _productItems) public onlyOwners {
+        require(_productItems.length > 0, "NO_ITEMS");
+        for(uint x; x < _productItems.length; x++) {
+            productPrices[_productItems[x].productId] = _productItems[x].price;
+        }
+    }
+
     function setData(string memory _key, string memory _data) private {
         IStorage(storageAddress).setKeyData(_key, IStorage.Data({owner: address(this), info: _data}));
     }
@@ -102,21 +140,5 @@ contract Dash {
         require(IERC20(rewardToken).balanceOf(address(this)) >= rewardAmount, "INSUFFICIENT_FUNDS");
         bool success = IERC20(rewardToken).transferFrom(address(this), _to, rewardAmount);
         require(success, "FAILED_REWARD");
-    }
-
-    function setOwner(address _owner) public onlyOwner {
-        owner = _owner;
-    }
-
-    function setAggregatorAddress(address _aggregatorAddress) public onlyOwner {
-        aggregatorAddress = _aggregatorAddress;
-    }
-
-    function setPaymentDestination(address _moneyDest) public onlyOwner {
-        paymentDestination = _moneyDest;
-    }
-
-    function setStorage(address _storageAddress) public onlyOwner {
-        storageAddress = _storageAddress;
     }
 }
