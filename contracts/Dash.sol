@@ -66,6 +66,7 @@ contract Dash {
         address _rewardReceiver
     ) external payable notEmpty(_productId) notEmpty(_key) {
         /* TODO:
+         * create the list of stable tokens and use their price if user uses such tokens 
          * check all calculations and be sure in valid values (without (under|over)flowing)
          */
         uint nativeCoinPrice = getLatestPrice();
@@ -90,7 +91,7 @@ contract Dash {
     }
 
     function clearData(string memory _key) public {
-        IStorage(storageAddress).clearData(_key);
+        IStorage(storageAddress).clearKeyData(_key);
     }
 
     function setData(string memory _key, string memory _data) private {

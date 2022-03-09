@@ -19,7 +19,7 @@ contract Storage is IStorage {
         _;
     }
 
-    function getData(string memory _key) external override view notEmpty(_key) returns(Data memory) {
+    function getData(string memory _key) external override view returns(Data memory) {
         return _keyData(_key);
     }
 
@@ -46,22 +46,14 @@ contract Storage is IStorage {
         }
     }
 
-    function clearData(string memory _key) external override notEmpty(_key) onlyDataOwner(_key) {
-        delete allData[_key];
-        if (keys.length == 0) return;
-        if (keys.length == 1) {
-            if (keccak256(abi.encodePacked(keys[0])) == keccak256(abi.encodePacked(_key))) {
-                keys.pop();
-            }
-        } else {
-            bool arrayOffset;
-            for(uint x; x < keys.length - 1; x++) {
-                if (keccak256(abi.encodePacked(keys[x])) == keccak256(abi.encodePacked(_key))) {
-                    arrayOffset = true;
-                }
-                if (arrayOffset) keys[x] = keys[x + 1];
-            }
-            if (arrayOffset) keys.pop();
+    function clearKeyData(string memory _key) external override {
+        _clearKeyData(_key);
+    }
+
+    function clearKeysData(string[] memory _keys) external override {
+        require(_keys.length > 0, 'NO_KEYS');
+        for(uint x; x < _keys.length; x++) {
+            _clearKeyData(_keys[x]);
         }
     }
 
@@ -80,5 +72,24 @@ contract Storage is IStorage {
         }
         allData[_key].owner = _data.owner;
         allData[_key].info = _data.info;
-    } 
+    }
+
+    function _clearKeyData(string memory _key) private notEmpty(_key) onlyDataOwner(_key) {
+        delete allData[_key];
+        if (keys.length == 0) return;
+        if (keys.length == 1) {
+            if (keccak256(abi.encodePacked(keys[0])) == keccak256(abi.encodePacked(_key))) {
+                keys.pop();
+            }
+        } else {
+            bool arrayOffset;
+            for(uint x; x < keys.length - 1; x++) {
+                if (keccak256(abi.encodePacked(keys[x])) == keccak256(abi.encodePacked(_key))) {
+                    arrayOffset = true;
+                }
+                if (arrayOffset) keys[x] = keys[x + 1];
+            }
+            if (arrayOffset) keys.pop();
+        }
+    }
 }

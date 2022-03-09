@@ -83,7 +83,7 @@ describe('Storage', function () {
     let data = await storage.getData(KEY1)
     let keys = await storage.allKeys()
 
-    await storage.clearData(KEY1)
+    await storage.clearKeyData(KEY1)
 
     data = await storage.getData(KEY1)
     keys = await storage.allKeys()
@@ -134,7 +134,7 @@ describe('Storage', function () {
     expect(dataC.owner).to.eq(wallet.address)
     expect(dataC.info).to.eq('C info')
 
-    await storage.clearData('B')
+    await storage.clearKeyData('B')
 
     allKeysData = await storage.allKeysData()
     keys = await storage.allKeys()
@@ -151,6 +151,22 @@ describe('Storage', function () {
     expect(dataB.info).to.eq('')
     expect(dataC.owner).to.eq(wallet.address)
     expect(dataC.info).to.eq('C info')
+  })
+
+  it('should clear data by many keys', async () => {
+    let keys = await storage.allKeys()
+    let allKeysData = await storage.allKeysData()
+
+    expect(JSON.stringify(keys)).to.eq(JSON.stringify(['A', 'C']))
+    expect(allKeysData.length).to.eq(2)
+
+    await storage.clearKeysData(keys)
+
+    keys = await storage.allKeys()
+    allKeysData = await storage.allKeysData()
+
+    expect(keys.length).to.eq(0)
+    expect(allKeysData.length).to.eq(0)
   })
 
   // TODO: how to change main wallet ?
