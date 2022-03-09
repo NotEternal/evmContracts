@@ -3,8 +3,27 @@
 - Ethereum: -
 - Rinkeby: `0xd2baDd65d97549EB8af9B83BcD74768c9ebaeC31`
 
+---
+
 - BSC: `0x4B2B549d0Be6013f30221f23d0165587cAc3f888`
 - BSC testnet: `0xF0BCf27a2203E7E8c1e9D36F40EF2C5A8a6E7D0B`
 
+---
+
 - Polygon: `0x8513A596f66900a463aBDDE4e493ea283e610c4D`
 - Polygon testnet: `0x3E75D01fea47910E47Bb5E37599E56D3Ac8356f7`
+
+---
+
+- Avalanche: ``
+- Avalanche testnet: `0x5459FC584868C68883691d0073c1394c4EbC5E7b`
+
+---
+
+- Fantom: ``
+- Fantom testnet: `0x04ad4Ce6015141F6f582A7451Cb7CD6866609298`
+
+---
+
+- Fuse: `0x275B20Fd63096B64A53B1311f179B39b4b25EFBc`
+- Fuse testnet: ``
