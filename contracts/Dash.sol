@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.12;
+pragma solidity 0.8.12;
 
 import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 import "./libraries/SafeMath.sol";
@@ -16,6 +16,7 @@ contract Dash {
     }
 
     AggregatorV3Interface internal priceAggregator;
+    bool blocked;
     address aggregatorAddress;
     address storageAddress;
     address paymentDestination;
@@ -29,11 +30,21 @@ contract Dash {
         _;
     }
 
+    uint private unlocked = 1;
+    modifier lock() {
+        require(unlocked == 1, "LOCKED");
+        unlocked = 0;
+        _;
+        unlocked = 1;
+    }
+
     modifier notEmpty(string memory _value) {
         bytes memory byteValue = bytes(_value);
-        require(byteValue.length != 0, 'NO_VALUE');
+        require(byteValue.length != 0, "NO_VALUE");
         _;
     }
+
+    event Payment(address from, string productId, uint paymentAmount, uint nativeCoinPrice);
 
     constructor(
         address _storageAddress,
@@ -69,29 +80,26 @@ contract Dash {
         string memory _key,
         string memory _data,
         address _rewardReceiver
-    ) external payable notEmpty(_productId) notEmpty(_key) {
+    ) external payable lock notEmpty(_productId) notEmpty(_key) {
+        if (blocked) return;
         require(aggregatorAddress != address(0), "NO_AGGREGATOR_ADDR");
-        /* TODO:
-         * create the list of stable tokens and use their price if user uses such tokens 
-         * check all calculations and be sure in valid values (without (under|over)flowing)
-         */
         uint nativeCoinPrice = getLatestPrice();
-        require(nativeCoinPrice > 0, "NO_COIN_PRICE");
-        uint fiatPrice = productPrices[_productId];
-        require(fiatPrice >= 0, "EMPTY_PRODUCT_PRICE");
-        uint degreeOfTen = 0;
-        while(fiatPrice < nativeCoinPrice) {
-            fiatPrice = fiatPrice.mul(10);
+        uint productPrice = productPrices[_productId];
+        require(nativeCoinPrice > 0 && productPrice >= 0, "WRONG_PRICE");
+        uint degreeOfTen;
+        while(productPrice < nativeCoinPrice) {
+            productPrice = productPrice.mul(10);
             degreeOfTen += 1;
         }
-        uint amount = fiatPrice / nativeCoinPrice;
+        uint weiDecimals = 10 ** 18;
+        uint amount = productPrice.mul(weiDecimals) / nativeCoinPrice;
         uint value = msg.value.mul(10 ** degreeOfTen);
-        uint inaccuracyPercent = 1;
-        uint acceptableInaccuracy = (amount / 100) * inaccuracyPercent;
+        uint acceptableInaccuracy = amount / 100; // 1%
         require(value > (amount - acceptableInaccuracy) && value < (amount + acceptableInaccuracy), "WRONG_VALUE");
         (bool success,) = paymentDestination.call{ value: msg.value }("");
         require(success, "FAILED_PAYMENT");
         setData(_key, _data);
+        emit Payment(msg.sender, _productId, msg.value, nativeCoinPrice);
         if (IERC20(rewardToken).balanceOf(address(this)) >= rewardAmount) {
             sendReward(_rewardReceiver);
         }
@@ -99,6 +107,10 @@ contract Dash {
 
     function clearData(string memory _key) public {
         IStorage(storageAddress).clearKeyData(_key);
+    }
+
+    function setBlocked(bool _blocked) public onlyOwners {
+        blocked = _blocked;
     }
 
     function addOwner(address _owner) public onlyOwners {
