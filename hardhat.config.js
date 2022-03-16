@@ -19,28 +19,37 @@ task('accounts', 'Prints the list of accounts', async (taskArgs, hre) => {
 })
 
 // https://hardhat.org/config/
-/**
- * @type import('hardhat/config').HardhatUserConfig
- */
+
+const optimizerConfig = {
+  enabled: true,
+  runs: 99999,
+}
+
 module.exports = {
   solidity: {
     compilers: [
       {
         version: '0.8.12',
         settings: {
-          optimizer: {
-            enabled: true,
-            runs: 99999,
-          },
+          optimizer: optimizerConfig,
         },
       },
       {
         version: '0.8.10',
         settings: {
-          optimizer: {
-            enabled: true,
-            runs: 99999,
-          },
+          optimizer: optimizerConfig,
+        },
+      },
+      {
+        version: '0.7.0',
+        settings: {
+          optimizer: optimizerConfig,
+        },
+      },
+      {
+        version: '0.5.12',
+        settings: {
+          optimizer: optimizerConfig,
         },
       },
     ],

@@ -16,7 +16,6 @@ contract Dash {
     AggregatorV3Interface internal priceAggregator;
     bool blocked;
     address aggregatorAddress;
-    address storageAddress;
     address paymentDestination;
     address rewardToken;
     uint rewardAmount;
@@ -46,7 +45,6 @@ contract Dash {
     event Payment(address from, string productId, uint paymentAmount, uint nativeCoinPrice);
 
     constructor(
-        address _storageAddress,
         address _owner,
         address _paymentDest,
         address _rewardToken,
@@ -55,7 +53,6 @@ contract Dash {
     ) {
         aggregatorAddress = _aggregatorAddress;
         priceAggregator = AggregatorV3Interface(_aggregatorAddress);
-        storageAddress = _storageAddress;
         owners[_owner] = _owner;
         paymentDestination = _paymentDest;
         rewardToken = _rewardToken;
@@ -79,7 +76,7 @@ contract Dash {
         string memory _data,
         address _rewardReceiver
     ) external payable lock notEmpty(_productId) {
-        if (blocked) return;
+        if (blocked) revert('BLOCKED');
         require(aggregatorAddress != address(0), "NO_AGGREGATOR_ADDR");
         uint nativeCoinPrice = getLatestPrice();
         uint productPrice = productPrices[_productId];
@@ -121,10 +118,6 @@ contract Dash {
         paymentDestination = _moneyDest;
     }
 
-    function setStorage(address _storageAddress) public onlyOwners {
-        storageAddress = _storageAddress;
-    }
-
     function setProductPrice(string memory _productId, uint _price) public onlyOwners {
         productPrices[_productId] = _price;
     }
@@ -138,6 +131,14 @@ contract Dash {
 
     function setData(address _target, string memory _data) public onlyOwners {
         _setData(_target, _data);
+    }
+
+    function setRewardAmount(uint _amount) public onlyOwners {
+        rewardAmount = _amount;
+    }
+
+    function setRewardToken(address _token) public onlyOwners {
+        rewardToken = _token;
     }
 
     function sendReward(address _to) private {
