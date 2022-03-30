@@ -7,8 +7,11 @@ async function main() {
   // manually to make sure everything is compiled
   // await hre.run('compile');
   const contractsToDeploy = [
-    { name: 'Storage', args: [] },
+    // { name: 'Dai', args: [] },
+    // { name: 'Storage', args: [] },
     // { name: 'Dash', args: [] },
+    // { name: 'Multicall2', args: [] },
+    // { name: 'Registry', args: [] },
   ]
 
   for (let i = 0; i < contractsToDeploy.length; i += 1) {
