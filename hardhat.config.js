@@ -41,6 +41,12 @@ module.exports = {
         },
       },
       {
+        version: '0.8.0',
+        settings: {
+          optimizer: optimizerConfig,
+        },
+      },
+      {
         version: '0.7.0',
         settings: {
           optimizer: optimizerConfig,
@@ -48,6 +54,12 @@ module.exports = {
       },
       {
         version: '0.5.12',
+        settings: {
+          optimizer: optimizerConfig,
+        },
+      },
+      {
+        version: '0.5.0',
         settings: {
           optimizer: optimizerConfig,
         },
@@ -124,6 +136,11 @@ module.exports = {
     fuseTestnet: {
       chainId: 123,
       url: 'https://rpc.fusespark.io',
+      accounts: [ACCOUNT_PRIVATE_KEY],
+    },
+    harmony: {
+      chainId: 1666600000,
+      url: 'https://api.harmony.one',
       accounts: [ACCOUNT_PRIVATE_KEY],
     },
   },
