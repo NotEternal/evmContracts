@@ -143,6 +143,16 @@ module.exports = {
       url: 'https://api.harmony.one',
       accounts: [ACCOUNT_PRIVATE_KEY],
     },
+    aurora: {
+      chainId: 1313161554,
+      url: 'https://mainnet.aurora.dev',
+      accounts: [ACCOUNT_PRIVATE_KEY],
+    },
+    auroraTestnet: {
+      chainId: 1313161555,
+      url: 'https://testnet.aurora.dev/',
+      accounts: [ACCOUNT_PRIVATE_KEY],
+    },
   },
   mocha: {
     timeout: 40_000,
