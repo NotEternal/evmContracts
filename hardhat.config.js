@@ -7,6 +7,7 @@ const {
   ETHERSCAN_API_KEY,
   BSCSCAN_API_KEY,
   POLYGON_API_KEY,
+  MOONRIVER_API_KEY,
 } = config.parsed
 
 // https://hardhat.org/guides/create-task.html
@@ -153,6 +154,11 @@ module.exports = {
       url: 'https://testnet.aurora.dev/',
       accounts: [ACCOUNT_PRIVATE_KEY],
     },
+    moonriver: {
+      chainId: 1285,
+      url: 'https://rpc.moonriver.moonbeam.network',
+      accounts: [ACCOUNT_PRIVATE_KEY],
+    },
   },
   mocha: {
     timeout: 40_000,
@@ -176,7 +182,7 @@ module.exports = {
       avalanche: '',
       avalancheFujiTestnet: '',
       moonbeam: '',
-      moonriver: '',
+      moonriver: MOONRIVER_API_KEY,
       moonbaseAlpha: '',
       harmony: '',
       harmonyTest: '',
