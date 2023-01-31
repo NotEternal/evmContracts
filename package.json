@@ -4,7 +4,12 @@
   "private": true,
   "description": "",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "deploy-bsc-testnet": "hardhat run --network bscTestnet scripts/deploy.js",
+    "verify-bsc-testnet": "hardhat verify --network bscTestnet"
+  },
   "license": "MIT",
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.5",

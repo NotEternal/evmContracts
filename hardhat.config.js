@@ -78,6 +78,11 @@ module.exports = {
       url: 'https://rinkeby.infura.io/v3/3cb031735f9a46a69f2babab4fae3e0d',
       accounts: [ACCOUNT_PRIVATE_KEY],
     },
+    goerli: {
+      chainId: 5,
+      url: 'https://goerli.infura.io/v3/fc55ddb25b694fef8e2363f6b6c9341f',
+      accounts: [ACCOUNT_PRIVATE_KEY],
+    },
     bsc: {
       chainId: 56,
       url: 'https://bsc-dataseed.binance.org',
@@ -85,7 +90,7 @@ module.exports = {
     },
     bscTestnet: {
       chainId: 97,
-      url: 'https://data-seed-prebsc-1-s1.binance.org:8545',
+      url: 'https://bsc-testnet.public.blastapi.io',
       accounts: [ACCOUNT_PRIVATE_KEY],
     },
     polygon: {
@@ -161,6 +166,7 @@ module.exports = {
     apiKey: {
       mainnet: ETHERSCAN_API_KEY,
       rinkeby: ETHERSCAN_API_KEY,
+      goerli: ETHERSCAN_API_KEY,
       bsc: BSCSCAN_API_KEY,
       bscTestnet: BSCSCAN_API_KEY,
       polygon: POLYGON_API_KEY,
