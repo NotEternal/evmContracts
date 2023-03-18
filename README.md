@@ -13,6 +13,7 @@
 
 - Polygon storage: `0x8513A596f66900a463aBDDE4e493ea283e610c4D`
 - Polygon testnet storage: `0x3E75D01fea47910E47Bb5E37599E56D3Ac8356f7`
+- Polygon testnet multicall: `0xEF65BF9e225A4B606aa5C46f944De35f566e58e4`
 
 ---
 
