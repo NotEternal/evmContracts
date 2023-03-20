@@ -7,6 +7,7 @@ const {
   ETHERSCAN_API_KEY,
   BSCSCAN_API_KEY,
   POLYGON_API_KEY,
+  AVALANCHE_API_KEY,
 } = config.parsed
 
 // https://hardhat.org/guides/create-task.html
@@ -100,7 +101,7 @@ module.exports = {
     },
     polygonTestnet: {
       chainId: 80001,
-      url: 'https://matic-mumbai.chainstacklabs.com',
+      url: 'https://polygon-mumbai.blockpi.network/v1/rpc/public',
       accounts: [ACCOUNT_PRIVATE_KEY],
     },
     cronos: {
@@ -120,7 +121,7 @@ module.exports = {
     },
     avalancheTestnet: {
       chainId: 43113,
-      url: 'https://api.avax-test.network/ext/bc/C/rpc',
+      url: 'https://endpoints.omniatech.io/v1/avax/fuji/public',
       accounts: [ACCOUNT_PRIVATE_KEY],
     },
     fantom: {
@@ -171,25 +172,8 @@ module.exports = {
       bscTestnet: BSCSCAN_API_KEY,
       polygon: POLYGON_API_KEY,
       polygonMumbai: POLYGON_API_KEY,
-      heco: '',
-      hecoTestnet: '',
-      opera: '',
-      ftmTestnet: '',
-      optimisticEthereum: '',
-      optimisticKovan: '',
-      arbitrumOne: '',
-      arbitrumTestnet: '',
-      avalanche: '',
-      avalancheFujiTestnet: '',
-      moonbeam: '',
-      moonriver: '',
-      moonbaseAlpha: '',
-      harmony: '',
-      harmonyTest: '',
-      xdai: '',
-      sokol: '',
-      aurora: '',
-      auroraTestnet: '',
+      avalanche: AVALANCHE_API_KEY,
+      avalancheFujiTestnet: AVALANCHE_API_KEY,
     },
   },
 }

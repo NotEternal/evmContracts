@@ -18,7 +18,8 @@
 ---
 
 - Avalanche storage: -
-- Avalanche testnet storage: `0x5459FC584868C68883691d0073c1394c4EbC5E7b`
+- Avalanche testnet storage: `0xb66e94f5B2a475D98EEc9012A95114AF6fB1fa02`
+- Avalanche testnet multicall: `0xEF65BF9e225A4B606aa5C46f944De35f566e58e4`
 
 ---
 

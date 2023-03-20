@@ -8,3 +8,4 @@ typechain
 cache
 artifacts
 *lock.json
+pnpm-lock.yaml
