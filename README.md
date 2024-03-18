@@ -28,3 +28,7 @@
 
 - Fuse storage: `0x275B20Fd63096B64A53B1311f179B39b4b25EFBc`
 - Fuse testnet storage: -
+
+---
+
+- Blast testnet multicall: `0xC397E78Ff03cf0c85389A51a4996bAd772B9066E`

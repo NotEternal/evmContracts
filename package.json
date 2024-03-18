@@ -1,14 +1,16 @@
 {
-  "name": "solidity-hardhat",
+  "name": "evm-contracts",
   "version": "1.0.0",
   "private": true,
-  "description": "",
   "main": "index.js",
+  "engines": {
+    "node": ">=18.19.0"
+  },
   "scripts": {
     "compile": "hardhat compile",
     "test": "hardhat test",
-    "deploy-bsc-testnet": "hardhat run --network bscTestnet scripts/deploy.js",
-    "verify-bsc-testnet": "hardhat verify --network bscTestnet"
+    "deploy-testnet": "hardhat run --network bscTestnet scripts/deploy.js",
+    "verify-testnet": "hardhat verify --network bscTestnet"
   },
   "license": "MIT",
   "devDependencies": {
