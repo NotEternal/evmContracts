@@ -1,5 +1,5 @@
 require('@nomiclabs/hardhat-waffle')
-require('@nomiclabs/hardhat-etherscan')
+require("@nomicfoundation/hardhat-verify");
 
 const config = require('dotenv').config()
 const {
@@ -8,6 +8,7 @@ const {
   BSCSCAN_API_KEY,
   POLYGON_API_KEY,
   MOONRIVER_API_KEY,
+  BLAST_API_KEY,
 } = config.parsed
 
 // https://hardhat.org/guides/create-task.html
@@ -206,6 +207,17 @@ module.exports = {
       sokol: '',
       aurora: '',
       auroraTestnet: '',
+      blast: BLAST_API_KEY,
     },
+    customChains: [
+      {
+        network: "blast",
+        chainId: 81457,
+        urls: {
+          apiURL: "https://api.blastscan.io/api",
+          browserURL: "https://blastscan.io/"
+        }
+      }
+    ]
   },
 }

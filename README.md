@@ -31,4 +31,5 @@
 
 ---
 
+- Blast multicall: `0xEF65BF9e225A4B606aa5C46f944De35f566e58e4`
 - Blast testnet multicall: `0xC397E78Ff03cf0c85389A51a4996bAd772B9066E`
